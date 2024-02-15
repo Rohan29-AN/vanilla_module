@@ -15,7 +15,7 @@ npm i vanilla_pay_international
 Here's how you can use the library in your Node.js application:
 
 ```javascript
-const vanillaPay = require('vanilla-pay-api-wrapper');
+const vanillaPay = require('vanilla_pay_international');
 
 // Generate a token
 const token = await vanillaPay.generateToken(ClientID, ClientSECRET, VpiVersion);
