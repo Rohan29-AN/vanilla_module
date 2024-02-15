@@ -2,7 +2,7 @@
   "name": "vanilla_pay",
   "version": "1.0.0",
   "description": "It is an international payment module",
-  "main": "index.js",
+  "main": "vpi_module.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
