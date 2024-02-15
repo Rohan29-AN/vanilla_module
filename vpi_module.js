@@ -2,7 +2,6 @@ const axios = require('axios');
 const { GET_TOKEN_ENDPOINT, INIT_PAYMENT_ENDPOINT, TRANSACTION_STATUS_ENDPOINT } = require('./config/const');
 const { hashData } = require('./config/utilities');
 module.exports = {
-
     /**
      * This function is used to generate the token used during transactions, which remains valid for 20 minutes.
      * @param {string} ClientID : The ClientID  retrieved from the back office (https://bo.vanilla-pay.net/pro/generatekey)
@@ -21,9 +20,17 @@ module.exports = {
         }
         try {
             const result = await axios.get(GET_TOKEN_ENDPOINT, { headers })
-            return result.data.Data.token
+            if (result && result.data.CodeRetour == 200) {
+                return result.data.Data.Token
+            }
+            else {
+                throw new Error('Failed to retrieve token')
+            }
         }
         catch (error) {
+            if (error.response) {
+                throw error.response.data
+            }
             throw error
         }
     },
@@ -58,9 +65,17 @@ module.exports = {
 
         try {
             const result = await axios.post(INIT_PAYMENT_ENDPOINT, body, { headers })
-            return result.data
+            if (result && result.data.CodeRetour == 200) {
+                return result.data.Data.url
+            }
+            else {
+                throw error
+            }
         }
         catch (error) {
+            if (error.response) {
+                throw error.response.data
+            }
             throw error
         }
 
@@ -90,7 +105,12 @@ module.exports = {
                 }
 
                 const result = await axios.get(`${TRANSACTION_STATUS_ENDPOINT}/${id}`, { headers })
-                return result
+                if (result && result.data.CodeRetour == 200) {
+                    return result.data
+                }
+                else {
+                    throw error
+                }
 
             }
             else {
@@ -98,7 +118,10 @@ module.exports = {
             }
         }
         catch (error) {
-            throw new Error('Failed to retrieve payment link: ' + error.message)
+            if (error.response) {
+                throw error.response.data
+            }
+            throw error
         }
 
 
@@ -108,12 +131,14 @@ module.exports = {
      * Validates the authenticity of the provided data by verifying the signature against the hashed body using the ClientSECRET
      * @param {string} vpi_signature : The signature extracted from the headers
      * @param {string} body : The data to be hashed and compared against the signature
-     * @param {string} ClientSECRET: The ClientSECRET retrieved from the back office (https://bo.vanilla-pay.net/pro/generatekey)
+     * @param {string} KeySecret: The KeySecret retrieved from the back office (https://bo.vanilla-pay.net/pro/generatekey)
      * @returns {boolean} Returns true if the data is authentic, otherwise returns false
      */
-    validateDataAuthenticity(vpi_signature, body, ClientSECRET) {
-        const hashedData=hashData(ClientSECRET,body)
-        return hashedData===vpi_signature
+    validateDataAuthenticity(vpi_signature, body, KeySecret) {
+        // Hash the provided body using the KeySecret
+        const hashedData = hashData(KeySecret, body)
+        // compare the hashed body with the provided signature
+        return hashedData === vpi_signature
     }
 }
 
