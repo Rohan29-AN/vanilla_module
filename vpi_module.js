@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { GET_TOKEN_ENDPOINT, INIT_PAYMENT_ENDPOINT } = require('./config/const');
+const { GET_TOKEN_ENDPOINT, INIT_PAYMENT_ENDPOINT, TRANSACTION_STATUS_ENDPOINT } = require('./config/const');
 module.exports = {
 
     /**
@@ -66,12 +66,41 @@ module.exports = {
     },
 
 
-    async testAxios() {
-        console.log("TEST")
-        const result = await axios.get('https://fakerapi.it/api/v1/persons?_locale=fr_')
-        console.log("result", result.data.data)
+    /**
+     * This function allows to see the status of the transaction
+     * @param {string} paymentLink : The payment link
+     * @param {string} VpiVersion: module version
+     * @param {string} token: the generated token 
+     * @returns {Promise<object>} - Response from API
+     * @throws {Error} - If there is an error during the payment link generation process
+     */
+    async getTransactionsStatus(paymentLink, VpiVersion, token) {
+        const regex = /id=([^&]+)/;
+
+        try {
+            //check if the link provided has an id
+            if (paymentLink.match(regex)) {
+                const id = paymentLink.match(regex)[1]
+                const headers =
+                {
+                    "Accept": "*/*",
+                    "Authorization": `${token}`,
+                    "VPI-Version": `${VpiVersion}`
+                }
+
+                const result = await axios.get(`${TRANSACTION_STATUS_ENDPOINT}/${id}`, { headers })
+                return result
+
+            }
+            else {
+                throw new Error("Invalid payment link")
+            }
+        }
+        catch (error) {
+            throw new Error('Failed to retrieve payment link: ' + error.message)
+        }
+
+
     }
-
-
 }
 
