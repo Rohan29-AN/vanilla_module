@@ -1,5 +1,5 @@
 {
-  "name": "vanilla-pay-international",
+  "name": "vanilla_pay_international",
   "version": "1.0.1",
   "description": "It is an international payment module",
   "main": "vpi_module.js",
