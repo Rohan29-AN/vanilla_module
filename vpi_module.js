@@ -1,5 +1,6 @@
 const axios = require('axios');
 const { GET_TOKEN_ENDPOINT, INIT_PAYMENT_ENDPOINT, TRANSACTION_STATUS_ENDPOINT } = require('./config/const');
+const { hashData } = require('./config/utilities');
 module.exports = {
 
     /**
@@ -101,6 +102,18 @@ module.exports = {
         }
 
 
+    },
+
+    /**
+     * Validates the authenticity of the provided data by verifying the signature against the hashed body using the ClientSECRET
+     * @param {string} vpi_signature : The signature extracted from the headers
+     * @param {string} body : The data to be hashed and compared against the signature
+     * @param {string} ClientSECRET: The ClientSECRET retrieved from the back office (https://bo.vanilla-pay.net/pro/generatekey)
+     * @returns {boolean} Returns true if the data is authentic, otherwise returns false
+     */
+    validateDataAuthenticity(vpi_signature, body, ClientSECRET) {
+        const hashedData=hashData(ClientSECRET,body)
+        return hashedData===vpi_signature
     }
 }
 
