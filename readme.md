@@ -1,5 +1,5 @@
 
-# Vanilla Pay API 
+# Vanilla Pay International 
 
 The Vanilla Pay API is wrapped by this JavaScript library. Developers can easily access the Vanilla Pay payment system from their applications using this tool.
 ## Installation
@@ -7,7 +7,7 @@ The Vanilla Pay API is wrapped by this JavaScript library. Developers can easily
 To use this library in your project, you can install it via npm:
 
 ```bash
-npm install vanilla-pay-api-wrapper
+npm i vanilla_pay_international
 ```
 
 ## Usage
@@ -69,4 +69,4 @@ Validates the authenticity of provided data by verifying the signature against t
 - `KeySecret`: The KeySecret retrieved from the back office.
 
 ## Copyright
-© 2024 Rohan29. All rights reserved.
+© 2024 Vanilla Pay. All rights reserved.
