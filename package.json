@@ -1,0 +1,33 @@
+{
+  "name": "vanilla_pay",
+  "version": "1.0.0",
+  "description": "It is an international payment module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "payment",
+    "vanilla_pay",
+    "vanilla",
+    "pay",
+    "vpi",
+    "international",
+    "payment",
+    "online",
+    "payments",
+    "digital",
+    "transactions",
+    "payment",
+    "gateway",
+    "finTech",
+    "secure",
+    "payments",
+    "e-commerce"
+  ],
+  "author": "Rohan29",
+  "license": "ISC",
+  "dependencies": {
+    "crypto-js": "^4.2.0"
+  }
+}
