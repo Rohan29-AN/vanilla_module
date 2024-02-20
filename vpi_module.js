@@ -41,6 +41,7 @@ module.exports = {
      * @param {string} token: the generated token 
      * @param {string} VpiVersion: the version of the vpi (module)
      * @param {number} montant: the amount of the transaction
+     * @param {string} montant: the currency of the transaction
      * @param {} reference: the pro external reference
      * @param {*} panier:  the identifier for the transaction
      * @param {*} notif_url: url called when the payment is finished
@@ -48,7 +49,7 @@ module.exports = {
      * @returns {Promise<object>} - Response from API
      * @throws {Error} - If there is an error during the payment link generation process
      */
-    async initPayment(token, VpiVersion, montant, reference, panier, notif_url, redirect_url) {
+    async initPayment(token, VpiVersion, montant,devise, reference, panier, notif_url, redirect_url) {
         const headers = {
             "Accept": "*/*",
             "Authorization": `${token}`,
@@ -57,6 +58,7 @@ module.exports = {
 
         const body = {
             "montant": montant,
+            "devise":devise,
             "reference": reference,
             "panier": panier,
             "notif_url": notif_url,
