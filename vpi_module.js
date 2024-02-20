@@ -41,7 +41,7 @@ module.exports = {
      * @param {string} token: the generated token 
      * @param {string} VpiVersion: the version of the vpi (module)
      * @param {number} montant: the amount of the transaction
-     * @param {string} montant: the currency of the transaction
+     * @param {string} devise: the currency of the transaction
      * @param {} reference: the pro external reference
      * @param {*} panier:  the identifier for the transaction
      * @param {*} notif_url: url called when the payment is finished
