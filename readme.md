@@ -21,7 +21,7 @@ const vanillaPay = require('vanilla_pay_international');
 const token = await vanillaPay.generateToken(ClientID, ClientSECRET, VpiVersion);
 
 // Initialize a payment
-const paymentLink = await vanillaPay.initPayment(token, VpiVersion, montant, reference, panier, notif_url, redirect_url);
+const paymentLink = await vanillaPay.initPayment(token, VpiVersion, montant,devise, reference, panier, notif_url, redirect_url);
 
 // Check the status of a transaction
 const transactionStatus = await vanillaPay.getTransactionsStatus(paymentLink, VpiVersion, token);
@@ -47,6 +47,7 @@ Generates a payment link for the customer to access and complete the payment.
 - `token`: The generated token.
 - `VpiVersion`: The version of the VPI module.
 - `montant`: The amount of the transaction.
+- `devise`: The currency of the transaction.
 - `reference`: The pro external reference.
 - `panier`: The identifier for the transaction.
 - `notif_url`: URL called when the payment is finished.
