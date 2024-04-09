@@ -81,5 +81,3 @@ Validates the authenticity of provided data by verifying the signature against t
 ## Copyright
 © 2024 Vanilla Pay. All rights reserved.
 
-
-Feel free to adjust the content and structure as needed based on your preferences and specific requirements.
