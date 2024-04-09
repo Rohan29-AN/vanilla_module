@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { GET_TOKEN_ENDPOINT, INIT_PAYMENT_ENDPOINT, TRANSACTION_STATUS_ENDPOINT } = require('./config/const');
+const { GET_TOKEN_ENDPOINT, INIT_PAYMENT_ENDPOINT, TRANSACTION_STATUS_ENDPOINT ,getBaseUrl} = require('./config/const');
 const { hashData } = require('./config/utilities');
 module.exports = {
     /**
@@ -7,10 +7,11 @@ module.exports = {
      * @param {string} ClientID : The ClientID  retrieved from the back office (https://bo.vanilla-pay.net/pro/generatekey)
      * @param {string} ClientSECRET: The ClientSECRET retrieved from the back office (https://bo.vanilla-pay.net/pro/generatekey)
      * @param {string} VpiVersion: module version
+     * @param {string} environment - The environment (PROD or PREPROD) 
      * @returns {} - the generated token
      * @throws {error} - If there is an error during the token retrieval process
      */
-    async generateToken(ClientID, ClientSECRET, VpiVersion) {
+    async generateToken(ClientID, ClientSECRET, VpiVersion,environment) {
 
         const headers = {
             "Accept": "*/*",
@@ -18,8 +19,13 @@ module.exports = {
             "Client-Secret": ClientSECRET,
             "VPI-Version": VpiVersion
         }
+        const baseUrl= getBaseUrl(environment)
+
         try {
-            const result = await axios.get(GET_TOKEN_ENDPOINT, { headers })
+            const tokenUrl=baseUrl+GET_TOKEN_ENDPOINT
+
+            const result = await axios.get(tokenUrl, { headers })
+
             if (result && result.data.CodeRetour == 200) {
                 return result.data.Data.Token
             }
@@ -46,10 +52,11 @@ module.exports = {
      * @param {*} panier:  the identifier for the transaction
      * @param {*} notif_url: url called when the payment is finished
      * @param {*} redirect_url: url to redirect the customer after completing the payment
+     * @param {string} environment - The environment (PROD or PREPROD)
      * @returns {Promise<object>} - Response from API
      * @throws {Error} - If there is an error during the payment link generation process
      */
-    async initPayment(token, VpiVersion, montant,devise, reference, panier, notif_url, redirect_url) {
+    async initPayment(token, VpiVersion, montant,devise, reference, panier, notif_url, redirect_url,environment) {
         const headers = {
             "Accept": "*/*",
             "Authorization": `${token}`,
@@ -65,8 +72,11 @@ module.exports = {
             "redirect_url": redirect_url
         }
 
+        const baseUrl= getBaseUrl(environment)
+
         try {
-            const result = await axios.post(INIT_PAYMENT_ENDPOINT, body, { headers })
+            const initPaymentUrl= baseUrl+INIT_PAYMENT_ENDPOINT
+            const result = await axios.post(initPaymentUrl, body, { headers })
             if (result && result.data.CodeRetour == 200) {
                 return result.data.Data.url
             }
@@ -89,12 +99,14 @@ module.exports = {
      * @param {string} paymentLink : The payment link
      * @param {string} VpiVersion: module version
      * @param {string} token: the generated token 
+     * @param {string} environment - The environment (PROD or PREPROD)
      * @returns {Promise<object>} - Response from API
      * @throws {Error} - If there is an error during the payment link generation process
      */
-    async getTransactionsStatus(paymentLink, VpiVersion, token) {
+    async getTransactionsStatus(paymentLink, VpiVersion, token,environment) {
         const regex = /id=([^&]+)/;
 
+        const baseUrl= getBaseUrl(environment)
         try {
             //check if the link provided has an id
             if (paymentLink.match(regex)) {
@@ -106,7 +118,8 @@ module.exports = {
                     "VPI-Version": `${VpiVersion}`
                 }
 
-                const result = await axios.get(`${TRANSACTION_STATUS_ENDPOINT}/${id}`, { headers })
+                const transactionUrl= baseUrl+TRANSACTION_STATUS_ENDPOINT
+                const result = await axios.get(`${transactionUrl}/${id}`, { headers })
                 if (result && result.data.CodeRetour == 200) {
                     return result.data
                 }
